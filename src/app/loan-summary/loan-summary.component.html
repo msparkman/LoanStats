@@ -1,0 +1,40 @@
+<div>
+    <label for="principal">Principal: </label>
+    <input id="principal" [(ngModel)]="loan.principal" placeholder="0">
+<!-- </div>
+<div> -->
+    <label for="rate">Rate: </label>
+    <input id="rate" [(ngModel)]="loan.rate" placeholder="0.00">
+<!-- </div>
+<div> -->
+    <label for="termYears">Term: </label>
+    <input id="termYears" [(ngModel)]="loan.termYears" placeholder="30">
+<!-- </div>
+<div> -->
+    <label for="monthlyPayment">Monthly Payment: </label>
+    <input id="monthlyPayment" [(ngModel)]="loan.monthlyPayment" placeholder="0">
+<!-- </div>
+<div> -->
+    <label for="extraPrincipalPayment">Extra Payment: </label>
+    <input id="extraPrincipalPayment" [(ngModel)]="loan.extraPrincipalPayment" placeholder="0">
+</div>
+<button type="button" (click)="calculate(loan)">
+    View Summary
+</button>
+
+<div *ngIf="loan.monthlyPayment">
+    <h2>Monthly Payment: {{loan.monthlyPayment | currency}}</h2>
+    <h3 *ngIf="loan.extraPrincipalPayment">{{loan.extraPrincipalPayment | currency}} extra each month</h3>
+    <li *ngFor="let month of loan.loanMonths">
+        <div>
+            <span>
+                Month: {{month.monthNum}}    |   
+                Principal: {{month.principal | currency}}  |   
+                Towards Interest: {{month.towardsInterest | currency}} |
+                Towards Principal: {{month.towardsPrincipal | currency}}
+            </span>
+        </div>
+    </li>
+    <h2 *ngIf="loan.loanMessage">{{loan.loanMessage}}</h2>
+    <h2 *ngIf="loan.totalInterestPaid">Total Interest Paid: {{loan.totalInterestPaid | currency}}</h2>
+</div>
