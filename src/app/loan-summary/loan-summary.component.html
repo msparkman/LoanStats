@@ -1,22 +1,14 @@
 <div>
     <label for="principal">Principal: </label>
-    <input id="principal" [(ngModel)]="loan.principal" placeholder="0">
-<!-- </div>
-<div> -->
+    <input id="principal" type="number" [(ngModel)]="loan.principal" currency required placeholder="100000">
     <label for="rate">Rate: </label>
-    <input id="rate" [(ngModel)]="loan.rate" placeholder="0.00">
-<!-- </div>
-<div> -->
+    <input id="rate" type="number" [(ngModel)]="loan.rate" required placeholder="1.99">
     <label for="termYears">Term: </label>
-    <input id="termYears" [(ngModel)]="loan.termYears" placeholder="30">
-<!-- </div>
-<div> -->
+    <input id="termYears" type="number" [(ngModel)]="loan.termYears" placeholder="30">
     <label for="monthlyPayment">Monthly Payment: </label>
-    <input id="monthlyPayment" [(ngModel)]="loan.monthlyPayment" placeholder="0">
-<!-- </div>
-<div> -->
+    <input id="monthlyPayment" type="number" [(ngModel)]="loan.monthlyPayment" placeholder="500">
     <label for="extraPrincipalPayment">Extra Payment: </label>
-    <input id="extraPrincipalPayment" [(ngModel)]="loan.extraPrincipalPayment" placeholder="0">
+    <input id="extraPrincipalPayment" type="number" [(ngModel)]="loan.extraPrincipalPayment" placeholder="0">
 </div>
 <button type="button" (click)="calculate(loan)">
     View Summary
