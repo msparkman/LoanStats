@@ -1,4 +1,4 @@
-# LoanStats
+# LoanStats Frontend
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.2.
 
@@ -22,6 +22,21 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+# LoanStats Backend
+
+This node server is used to store and retrieve Loan information for the frontend using Postgres and Express.
+
+## Start the server
+Run `node server.js` to start the server with Express APIs listening on `http://localhost:13000`
+
+# Docker Steps
+
+## Build the frontend image
+Run `docker build -t loan-stats-frontend .`
+
+## Build the backend image
+Run `docker build -t loan-stats-backend ./server`
+
+## Use Docker Compose
+Run `docker-compose up`

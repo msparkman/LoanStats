@@ -1,0 +1,16 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password123
+      POSTGRES_USER: user123
+      POSTGRES_DB: db123
+  backend:
+    image: loan-stats-backend
+    ports:
+      - 13000:3000
+  frontend:
+    image: loan-stats-frontend
+    ports:
+      - 4200:4200

@@ -1,0 +1,18 @@
+###
+GET http://localhost:13000/setup
+
+###
+GET http://localhost:13000
+
+###
+POST http://localhost:13000
+Content-Type: application/json
+
+{
+    "name": "testLoan1",
+    "principal": 124000,
+    "rate": 2.99,
+    "termYears": 26,
+    "monthlyPayment": null,
+    "extraMonthlyPayment": null
+}
