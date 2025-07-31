@@ -1,32 +1,119 @@
-<div>
-    <label for="principal">Principal: </label>
-    <input id="principal" type="number" [(ngModel)]="loan.principal" currency required placeholder="100000">
-    <label for="rate">Rate: </label>
-    <input id="rate" type="number" [(ngModel)]="loan.rate" required placeholder="1.99">
-    <label for="termYears">Term: </label>
-    <input id="termYears" type="number" [(ngModel)]="loan.termYears" placeholder="30">
-    <label for="monthlyPayment">Monthly Payment: </label>
-    <input id="monthlyPayment" type="number" [(ngModel)]="loan.monthlyPayment" placeholder="500">
-    <label for="extraPrincipalPayment">Extra Payment: </label>
-    <input id="extraPrincipalPayment" type="number" [(ngModel)]="loan.extraPrincipalPayment" placeholder="0">
-</div>
-<button type="button" (click)="calculate(loan)">
-    View Summary
-</button>
-
-<div *ngIf="loan.monthlyPayment">
-    <h2>Monthly Payment: {{loan.monthlyPayment | currency}}</h2>
-    <h3 *ngIf="loan.extraPrincipalPayment">{{loan.extraPrincipalPayment | currency}} extra each month</h3>
-    <li *ngFor="let month of loan.loanMonths">
-        <div>
-            <span>
-                Month: {{month.monthNum}}    |   
-                Principal: {{month.principal | currency}}  |   
-                Towards Interest: {{month.towardsInterest | currency}} |
-                Towards Principal: {{month.towardsPrincipal | currency}}
-            </span>
+<div class="loan-summary-container">
+  <div class="loan-form-card">
+    <h1 class="page-title">Loan Calculator</h1>
+    
+    <form class="loan-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="principal">Principal Amount</label>
+          <input 
+            id="principal" 
+            name="principal"
+            type="string" 
+            [(ngModel)]="loan.principal" 
+            currency 
+            required 
+            placeholder="100,000"
+            class="form-input">
         </div>
-    </li>
-    <h2 *ngIf="loan.loanMessage">{{loan.loanMessage}}</h2>
-    <h2 *ngIf="loan.totalInterestPaid">Total Interest Paid: {{loan.totalInterestPaid | currency}}</h2>
+        
+        <div class="form-group">
+          <label for="rate">Interest Rate (%)</label>
+          <input 
+            id="rate" 
+            name="rate"
+            type="string" 
+            [(ngModel)]="loan.rate" 
+            required 
+            placeholder="1.99"
+            class="form-input">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="termYears">Term (Years)</label>
+          <input 
+            id="termYears" 
+            name="termYears"
+            type="string" 
+            [(ngModel)]="loan.termYears" 
+            placeholder="30"
+            class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label for="monthlyPayment">Monthly Payment</label>
+          <input 
+            id="monthlyPayment" 
+            name="monthlyPayment"
+            type="string" 
+            [(ngModel)]="loan.monthlyPayment" 
+            placeholder="500"
+            class="form-input">
+        </div>
+      </div>
+      
+      <div class="form-group full-width">
+        <label for="extraPrincipalPayment">Extra Principal Payment</label>
+        <input 
+          id="extraPrincipalPayment" 
+          name="extraPrincipalPayment"
+          type="string" 
+          [(ngModel)]="loan.extraPrincipalPayment" 
+          placeholder="0"
+          class="form-input">
+      </div>
+      
+      <button type="button" (click)="calculate(loan)" class="calculate-btn">
+        <span>Calculate Loan Summary</span>
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="loan.monthlyPayment" class="results-section">
+    <div class="summary-cards">
+      <div class="summary-card primary">
+        <h2 class="card-title">Monthly Payment</h2>
+        <p class="card-value">{{loan.monthlyPayment | currency}}</p>
+      </div>
+      
+      <div class="summary-card secondary" *ngIf="loan.extraPrincipalPayment">
+        <h3 class="card-title">Extra Payment</h3>
+        <p class="card-value">{{loan.extraPrincipalPayment | currency}}</p>
+        <p class="card-subtitle">per month</p>
+      </div>
+      
+      <div class="summary-card accent" *ngIf="loan.totalInterestPaid">
+        <h2 class="card-title">Total Interest</h2>
+        <p class="card-value">{{loan.totalInterestPaid | currency}}</p>
+      </div>
+    </div>
+    
+    <div class="loan-message" *ngIf="loan.loanMessage">
+      <div class="message-card">
+        <h2>{{loan.loanMessage}}</h2>
+      </div>
+    </div>
+    
+    <div class="payment-schedule">
+      <h2 class="schedule-title">Payment Schedule</h2>
+      <div class="schedule-container">
+        <div class="schedule-header">
+          <span class="header-item">Month</span>
+          <span class="header-item">Balance</span>
+          <span class="header-item">Interest</span>
+          <span class="header-item">Principal</span>
+        </div>
+        <div class="schedule-body">
+          <div *ngFor="let month of loan.loanMonths" class="schedule-row">
+            <span class="schedule-item month">{{month.monthNum}}</span>
+            <span class="schedule-item balance">{{month.principal | currency}}</span>
+            <span class="schedule-item interest">{{month.towardsInterest | currency}}</span>
+            <span class="schedule-item principal">{{month.towardsPrincipal | currency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
