@@ -1,42 +1,190 @@
-# LoanStats Frontend
+# LoanStats
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.2.
+A comprehensive loan calculator and management application built with Angular and Node.js. Calculate loan payments and manage multiple loan scenarios.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- 🧮 **Loan Calculator**: Calculate monthly payments, interest, and payoff schedules
+- 💾 **Save & Load Loans**: Store multiple loan scenarios with unique names
+- 📊 **Payment Schedule**: View detailed month-by-month payment breakdowns
+- 💰 **Extra Payments**: Calculate the impact of additional principal payments
+- 🎯 **Flexible Input**: Calculate by term length OR monthly payment amount
 
-## Code scaffolding
+## Tech Stack
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Frontend**: Angular 15, TypeScript, CSS3
+- **Backend**: Node.js, Express.js
+- **Database**: PostgreSQL
+- **Containerization**: Docker & Docker Compose
 
-## Build
+## Quick Start
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Prerequisites
 
-## Running unit tests
+- Node.js 18+ and npm
+- Docker and Docker Compose
+- Git
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Option 1: Docker (Recommended)
 
-## Running end-to-end tests
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/msparkman/LoanStats.git
+   cd LoanStats
+   ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+2. **Start all services**
+   ```bash
+   docker compose up --build
+   ```
 
+3. **Setup the database**
+   ```bash
+   curl http://localhost:13000/setup
+   ```
 
-# LoanStats Backend
+4. **Access the application**
+   - Frontend: http://localhost:4200
+   - Backend API: http://localhost:13000
 
-This node server is used to store and retrieve Loan information for the frontend using Postgres and Express.
+### Option 2: Local Development
 
-## Start the server
-Run `node server.js` to start the server with Express APIs listening on `http://localhost:13000`
+1. **Clone and install dependencies**
+   ```bash
+   git clone https://github.com/msparkman/LoanStats.git
+   cd LoanStats
+   npm install
+   cd server && npm install && cd ..
+   ```
 
-# Docker Steps
+2. **Start PostgreSQL database**
+   ```bash
+   docker compose up db -d
+   ```
 
-## Build the frontend image
-Run `docker build -t loan-stats-frontend .`
+3. **Start the backend**
+   ```bash
+   cd server
+   npm start
+   ```
 
-## Build the backend image
-Run `docker build -t loan-stats-backend ./server`
+4. **Start the frontend** (in new terminal)
+   ```bash
+   npm start
+   ```
 
-## Use Docker Compose
-Run `docker-compose up`
+5. **Setup the database**
+   ```bash
+   curl http://localhost:13000/setup
+   ```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Get all saved loans |
+| POST | `/` | Save a new loan |
+| GET | `/setup` | Create/reset the database table |
+
+### Example API Usage
+
+**Save a loan:**
+```bash
+curl -X POST http://localhost:13000/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Home Loan",
+    "principal": 300000,
+    "rate": 3.5,
+    "termYears": 30,
+    "extraMonthlyPayment": 100
+  }'
+```
+
+**Get all loans:**
+```bash
+curl http://localhost:13000/
+```
+
+## Configuration
+
+### Environment Variables
+
+**Backend (.env or docker-compose.yaml):**
+- `DB_HOST`: Database host (default: `localhost` or `db` in Docker)
+- `DB_PORT`: Database port (default: `5433` local, `5432` in Docker)
+- `PORT`: Server port (default: `13000`)
+
+### Database Schema
+
+```sql
+CREATE TABLE loans (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    principal INT NOT NULL CHECK(principal > 0),
+    rate NUMERIC CHECK(rate > 0),
+    termYears SMALLINT,
+    monthlyPayment NUMERIC,
+    extraMonthlyPayment NUMERIC DEFAULT 0
+);
+```
+
+## Development
+
+### Frontend Development
+```bash
+npm start              # Start dev server on :4200
+npm run build          # Build for production
+npm test               # Run unit tests
+```
+
+### Backend Development
+```bash
+cd server
+npm start              # Start server on :13000
+npm run dev            # Start with nodemon (if configured)
+```
+
+### Docker Development
+```bash
+docker compose up --build     # Build and start all services
+docker compose up db -d       # Start only database
+docker compose logs backend   # View backend logs
+docker compose down           # Stop all services
+```
+
+## Testing the API
+
+Use the included REST client file at `server/test.rest` with VS Code REST Client extension, or use curl commands as shown above.
+
+## Troubleshooting
+
+### Common Issues
+
+**Port already in use:**
+```bash
+# Find and kill process using port 13000
+lsof -ti:13000 | xargs kill
+
+# Or use different port in docker-compose.yaml
+```
+
+**Database connection issues:**
+```bash
+# Check if database is running
+docker ps | grep postgres
+
+# Reset database
+curl http://localhost:13000/setup
+```
+
+**Frontend not loading:**
+```bash
+# Clear Angular cache
+rm -rf .angular/cache
+npm start
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
