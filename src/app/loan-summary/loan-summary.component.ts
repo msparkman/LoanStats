@@ -1,18 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Loan } from '../loan';
 import { LoanMonth } from '../loan-month';
+import { LoanService } from '../loan.service';
 
 @Component({
   selector: 'app-loan-summary',
   templateUrl: './loan-summary.component.html',
   styleUrls: ['./loan-summary.component.css']
 })
-export class LoanSummaryComponent {
+export class LoanSummaryComponent implements OnInit {
   loan: Loan = {
+    name: "",
     principal: "126,000.00",
     rate: "2.99",
     termYears: "30"
   };
+
+  savedLoans: Loan[] = [];
+  showSavedLoans = false;
+  saveMessage = "";
+
+  constructor(private loanService: LoanService) {}
+
+  ngOnInit(): void {
+    this.loadSavedLoans();
+  }
 
   calculate(loan: Loan): void {
     const validationError = this.validateLoan(loan);
@@ -180,5 +192,65 @@ export class LoanSummaryComponent {
     }
     
     return null;
+  }
+
+  saveLoan(): void {
+    if (!this.loan.name || this.loan.name.trim().length === 0) {
+      this.saveMessage = "Please enter a name for the loan";
+      return;
+    }
+
+    this.loanService.saveLoan(this.loan).subscribe({
+      next: (response) => {
+        this.saveMessage = response.message;
+        this.loadSavedLoans();
+        setTimeout(() => this.saveMessage = "", 3000);
+      },
+      error: (error) => {
+        this.saveMessage = "Error saving loan: " + (error.error?.message || error.message);
+        setTimeout(() => this.saveMessage = "", 3000);
+      }
+    });
+  }
+
+  loadSavedLoans(): void {
+    this.loanService.getAllLoans().subscribe({
+      next: (response) => {
+        this.savedLoans = response.loan;
+      },
+      error: (error) => {
+        console.error('Error loading loans:', error);
+      }
+    });
+  }
+
+  loadLoan(savedLoan: Loan): void {
+    this.loan = {
+      id: savedLoan.id,
+      name: savedLoan.name,
+      principal: savedLoan.principal?.toString() || "",
+      rate: savedLoan.rate?.toString() || "",
+      termYears: savedLoan.termYears?.toString() || "",
+      extraPrincipalPayment: savedLoan.extraPrincipalPayment?.toString() || "",
+      monthlyPayment: savedLoan.monthlyPayment?.toString() || ""
+    };
+    this.calculate(this.loan);
+    this.showSavedLoans = false;
+  }
+
+  toggleSavedLoans(): void {
+    this.showSavedLoans = !this.showSavedLoans;
+  }
+
+  clearForm(): void {
+    this.loan = {
+      name: "",
+      principal: "",
+      rate: "",
+      termYears: "",
+      extraPrincipalPayment: "",
+      monthlyPayment: ""
+    };
+    this.saveMessage = "";
   }
 }

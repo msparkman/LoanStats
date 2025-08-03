@@ -7,5 +7,5 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
-CMD ["npm", "run", "backend"]
+EXPOSE 13000
+CMD ["npm", "start"]
