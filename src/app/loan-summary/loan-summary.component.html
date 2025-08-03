@@ -3,6 +3,17 @@
     <h1 class="page-title">Loan Calculator</h1>
     
     <form class="loan-form">
+      <div class="form-group full-width">
+        <label for="name">Loan Name</label>
+        <input 
+          id="name" 
+          name="name"
+          type="text" 
+          [(ngModel)]="loan.name" 
+          placeholder="My Home Loan"
+          class="form-input">
+      </div>
+      
       <div class="form-row">
         <div class="form-group">
           <label for="principal">Principal Amount</label>
@@ -65,10 +76,41 @@
           class="form-input">
       </div>
       
-      <button type="button" (click)="calculate(loan)" class="calculate-btn">
-        <span>Calculate Loan Summary</span>
-      </button>
+      <div class="button-row">
+        <button type="button" (click)="calculate(loan)" class="calculate-btn">
+          <span>Calculate Loan Summary</span>
+        </button>
+        <button type="button" (click)="saveLoan()" class="save-btn" [disabled]="!loan.name">
+          <span>Save Loan</span>
+        </button>
+        <button type="button" (click)="clearForm()" class="clear-btn">
+          <span>Clear</span>
+        </button>
+        <button type="button" (click)="toggleSavedLoans()" class="view-btn">
+          <span>{{ showSavedLoans ? 'Hide' : 'View' }} Saved Loans</span>
+        </button>
+      </div>
+      
+      <div *ngIf="saveMessage" class="save-message">
+        {{saveMessage}}
+      </div>
     </form>
+  </div>
+
+  <div *ngIf="showSavedLoans" class="saved-loans-section">
+    <h2>Saved Loans</h2>
+    <div *ngIf="savedLoans.length === 0" class="no-loans-message">
+      No saved loans found.
+    </div>
+    <div *ngFor="let savedLoan of savedLoans" class="saved-loan-card" (click)="loadLoan(savedLoan)">
+      <h3>{{savedLoan.name}}</h3>
+      <div class="loan-details">
+        <span>Principal: {{savedLoan.principal | currency}}</span>
+        <span>Rate: {{savedLoan.rate}}%</span>
+        <span *ngIf="savedLoan.termYears">Term: {{savedLoan.termYears}} years</span>
+        <span *ngIf="savedLoan.monthlyPayment">Monthly Payment: {{savedLoan.monthlyPayment | currency}}</span>
+      </div>
+    </div>
   </div>
 
   <div *ngIf="loan.monthlyPayment" class="results-section">

@@ -1,6 +1,8 @@
 import { LoanMonth } from "./loan-month";
 
 export interface Loan {
+    id?: number;
+    name?: string;
     principal: string;
     rate: string;
     termYears?: string;
