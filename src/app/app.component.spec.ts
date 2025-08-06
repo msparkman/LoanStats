@@ -1,12 +1,22 @@
 import { TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
+import { LoanSummaryComponent } from './loan-summary/loan-summary.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
+      imports: [
+        FormsModule,
+        HttpClientTestingModule
       ],
+      declarations: [
+        AppComponent,
+        LoanSummaryComponent
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   });
 
@@ -22,10 +32,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('loan-stats');
   });
 
-  it('should render title', () => {
+  it('should render the loan-summary component', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('loan-stats app is running!');
+    const compiled = fixture.nativeElement;
+    expect(compiled.querySelector('app-loan-summary')).not.toBe(null);
   });
 });

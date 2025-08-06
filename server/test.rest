@@ -16,3 +16,11 @@ Content-Type: application/json
     "monthlyPayment": null,
     "extraMonthlyPayment": null
 }
+
+###
+DELETE http://localhost:13000/clear
+Content-Type: application/json
+
+{
+    "id": 9
+}
