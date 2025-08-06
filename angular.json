@@ -60,10 +60,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "loan-stats:build:production"
+              "buildTarget": "loan-stats:build:production"
             },
             "development": {
-              "browserTarget": "loan-stats:build:development"
+              "buildTarget": "loan-stats:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -71,7 +71,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "loan-stats:build"
+            "buildTarget": "loan-stats:build"
           }
         },
         "test": {
