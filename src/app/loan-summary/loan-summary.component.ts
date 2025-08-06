@@ -37,26 +37,32 @@ export class LoanSummaryComponent implements OnInit {
 
     // Parse and format inputs
     let principal: number = this.parseCurrency(loan.principal);
-    let monRate: number = this.parseRate(loan.rate) / (12 * 100);
+    let rate: number = this.parseRate(loan.rate) / (12 * 100);
     let monPay: number = 0;
 
     // If loan length is given, calculate the monthly payment
     if (loan.termYears) {
       let termMon: number = this.parseInteger(loan.termYears) * 12;
       // Monthly Payment
-      monPay = principal * (monRate / (1 - (1 + monRate) ** -termMon));
+      if (rate > 0) {
+        monPay = principal * (rate / (1 - (1 + rate) ** -termMon));
+      } else {
+        monPay = principal / termMon;
+      }
       loan.monthlyPayment =  monPay.toFixed(2);
     } else if (loan.monthlyPayment) {
       monPay = this.parseCurrency(loan.monthlyPayment);     
     }
 
     // Validate that monthly payment is sufficient to cover interest
-    let firstMonthInterest = principal * monRate;
-    if (monPay <= firstMonthInterest) {
-      loan.loanMessage = "Error: Monthly payment is too low to cover interest. Loan will never be paid off.";
-      loan.loanMonths = [];
-      loan.totalInterestPaid = 0;
-      return;
+    if (rate > 0) {
+      let firstMonthInterest = principal * rate;
+      if (monPay <= firstMonthInterest) {
+        loan.loanMessage = "Error: Monthly payment is too low to cover interest. Loan will never be paid off.";
+        loan.loanMonths = [];
+        loan.totalInterestPaid = 0;
+        return;
+      }
     }
 
     let oldPrincipal: number = principal;
@@ -72,7 +78,7 @@ export class LoanSummaryComponent implements OnInit {
     
     while (newPrincipal > 0 && numOfMonths <= maxMonths) {
         // Monthly Interest Payment
-        let monInterestPay: number = newPrincipal * monRate;
+        let monInterestPay: number = newPrincipal * rate;
         // Monthly Principal Payment
         let monPrincipalPay: number = monPay - monInterestPay;
 
@@ -175,8 +181,8 @@ export class LoanSummaryComponent implements OnInit {
       return "Principal amount must be greater than 0";
     }
     
-    if (rate <= 0) {
-      return "Interest rate must be greater than 0";
+    if (rate < 0) {
+      return "Interest rate must be a positive number";
     }
     
     if (!loan.termYears && !loan.monthlyPayment) {

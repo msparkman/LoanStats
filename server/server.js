@@ -123,19 +123,25 @@ app.post('/', async (req, res) => {
     }
 })
 
-app.delete('/clear', async (req, res) => {
+app.delete('/loans/:id', async (req, res) => {
+    const { id } = req.params
     const startTime = Date.now()
-    console.log(`[${new Date().toISOString()}] DELETE /clear - Clearing all loans from database`)
+    console.log(`[${new Date().toISOString()}] DELETE /loans/${id} - Deleting loan with ID ${id} from database`)
+
     try {
-        const result = await pool.query('DELETE FROM loans')
+        const result = await pool.query(
+            `DELETE FROM loans
+                WHERE id = $1
+            `,
+            [parseInt(id, 10)]
+        )
         const duration = Date.now() - startTime
-        console.log(`[${new Date().toISOString()}] DELETE /clear - Cleared ${result.rowCount} loans (${duration}ms)`)
-        res.status(200).send({ message: `Successfully cleared ${result.rowCount} loans from database` })
+        console.log(`[${new Date().toISOString()}] DELETE /loans/${id} - Deleted ${result.rowCount} loan (${duration}ms)`)
+        res.status(200).send({ message: `Successfully deleted loan with ID ${id}` })
     } catch (err) {
         const duration = Date.now() - startTime
-        console.error(`[${new Date().toISOString()}] DELETE /clear - Database error after ${duration}ms:`, err.message)
-        console.error(`[${new Date().toISOString()}] DELETE /clear - Full error:`, err)
-        res.status(500).send({ message: "Error clearing loans: " + err.message })
+        console.error(`[${new Date().toISOString()}] DELETE /loans/${id} - Database error after ${duration}ms:`, err.message)
+        res.status(500).send({ message: "Error deleting loan: " + err.message })
     }
 })
 
@@ -169,9 +175,13 @@ app.get('/setup', async (req, res) => {
     }
 })
 
-app.listen(port, () => {
-    console.log(`[${new Date().toISOString()}] Server has started on port ${port}`)
-    console.log(`[${new Date().toISOString()}] Environment: ${process.env.NODE_ENV || 'development'}`)
-    console.log(`[${new Date().toISOString()}] Database host: ${process.env.DB_HOST || 'localhost'}`)
-    console.log(`[${new Date().toISOString()}] Database port: ${process.env.DB_PORT || 5433}`)
-})
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`[${new Date().toISOString()}] Server has started on port ${port}`)
+        console.log(`[${new Date().toISOString()}] Environment: ${process.env.NODE_ENV || 'development'}`)
+        console.log(`[${new Date().toISOString()}] Database host: ${process.env.DB_HOST || 'localhost'}`)
+        console.log(`[${new Date().toISOString()}] Database port: ${process.env.DB_PORT || 5433}`)
+    })
+}
+
+module.exports = app
