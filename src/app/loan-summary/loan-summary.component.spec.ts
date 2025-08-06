@@ -1,8 +1,9 @@
 import { FormsModule } from '@angular/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { LoanSummaryComponent } from './loan-summary.component';
 import { Loan } from '../loan';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('LoanSummaryComponent', () => {
   let component: LoanSummaryComponent;
@@ -10,9 +11,10 @@ describe('LoanSummaryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, FormsModule ],
-      declarations: [ LoanSummaryComponent ]
-    })
+    declarations: [LoanSummaryComponent],
+    imports: [FormsModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(LoanSummaryComponent);
