@@ -82,16 +82,6 @@
 .calculate-btn {
   background: linear-gradient(135deg, #4a9eff, #357abd);
   color: white;
-  border: none;
-  padding: 15px 30px;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .calculate-btn:hover {
@@ -114,7 +104,7 @@
   margin-top: 20px;
 }
 
-.save-btn, .clear-btn, .view-btn {
+.calculate-btn, .save-btn, .clear-btn, .view-btn {
   padding: 15px 30px;
   border: none;
   border-radius: 8px;
